@@ -30,7 +30,14 @@ module.exports = function(app) {
   });
 
   booksRouter.post('/', function(req, res) {
-    res.status(201).end();
+    // Need body parser for this post method to work
+    var newBook = req.body.book;
+    var newId = books.length + 1;
+    newBook.id = newId;
+    books.push(newBook);
+    res.send({
+      book: newBook
+    });
   });
 
   booksRouter.get('/:id', function(req, res) {
