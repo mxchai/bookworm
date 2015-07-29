@@ -6,7 +6,11 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('books');
+  this.route('books', function(){
+    // e.g. books/3
+    this.route('book', { path: ':book_id' });
+    this.route('new');
+  });
 });
 
 export default Router;
