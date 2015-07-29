@@ -1,6 +1,10 @@
 <div class="row">
   <div class="col-sm-4">
-    {{books-list}}
+    {{books-list books=model}}
   </div>
-  <div class="col-sm-8"></div>
+  <div class="col-sm-8">
+    {{#each model.books as |joke|}}
+      {{joke.title}}
+    {{/each}}
+  </div>
 </div>
