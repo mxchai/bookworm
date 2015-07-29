@@ -24,8 +24,21 @@ module.exports = function(app) {
   ];
 
   booksRouter.get('/', function(req, res) {
+    var data = [];
+    books.forEach(function(item) {
+      data.push({
+        type: 'books',
+        id: item.id.toString(),
+        attributes: {
+          title: item.title,
+          description: item.description,
+          author: item.author
+        }
+      })
+    })
+    res.set('Content-Type', 'application/vnd.api+json');
     res.send({
-      'books': books
+      data: data
     });
   });
 
