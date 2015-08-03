@@ -43,6 +43,28 @@ module.exports = function(app) {
     });
   });
 
+  booksRouter.patch('/:id', function(req, res) {
+    var bookAttrs = req.body.data.attributes;
+    var bookId = req.param('id');
+    
+    books.forEach(function(item) {
+      if (item.id === parseInt(bookId)) {
+        item.title = bookAttrs.title;
+        item.description = bookAttrs.description;
+        item.author = bookAttrs.author;
+      }
+    });
+
+    // Response to the client
+    res.send({
+      data: {
+        type: 'books',
+        id: bookId,
+        attributes: bookAttrs
+      }
+    });
+  });
+
   booksRouter.post('/', function(req, res) {
     // Need body parser for this post method to work
     // body.data probably extracts the hash I think
