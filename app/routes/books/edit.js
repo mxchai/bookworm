@@ -9,13 +9,4 @@ export default Ember.Route.extend({
   setupController: function(controller, model) {
     controller.set('book', model);
   },
-
-  actions: {
-    updateBook(book) {
-      var _this = this;
-      book.save().then(function(book) {
-        _this.transitionTo('books.book', book);
-      });
-    }
-  }
 });
