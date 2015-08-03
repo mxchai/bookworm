@@ -1,1 +1,3 @@
-{{book-form book=book action="updateBook"}}
+{{!-- Errors object is passed in to the component. The errors is set inside the controller
+by the route, remember. --}}
+{{book-form errors=errors book=book action="updateBook"}}

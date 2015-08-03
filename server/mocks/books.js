@@ -46,6 +46,13 @@ module.exports = function(app) {
   booksRouter.patch('/:id', function(req, res) {
     var bookAttrs = req.body.data.attributes;
     var bookId = req.param('id');
+
+    var bookTitles = [];
+    books.forEach(function(item) {
+      if (item.id !== parseInt(bookId)) {
+        bookTitles.push(item.title);
+      }
+    });
     
     books.forEach(function(item) {
       if (item.id === parseInt(bookId)) {
@@ -55,14 +62,25 @@ module.exports = function(app) {
       }
     });
 
-    // Response to the client
-    res.send({
-      data: {
-        type: 'books',
-        id: bookId,
-        attributes: bookAttrs
-      }
-    });
+     if (bookTitles.indexOf(bookAttrs.title) !== -1) {
+      res.status(400).send({
+        errors: [
+          {
+            source: { pointer: '/data/attributes/title' },
+            detail: 'must be unique'
+          }
+        ]
+      });
+    } else {
+      // Response to the client
+      res.send({
+        data: {
+          type: 'books',
+          id: bookId,
+          attributes: bookAttrs
+        }
+      });
+    }
   });
 
   booksRouter.post('/', function(req, res) {
@@ -70,23 +88,38 @@ module.exports = function(app) {
     // body.data probably extracts the hash I think
     var newBook = req.body.data.attributes;
     var newId = books.length + 1;
-    
-    // books is server memory of the book store, a JS array
-    books.push({
-      title: newBook.title,
-      description: newBook.description,
-      author: newBook.author,
-      id: newId
+    var bookTitles = [];
+    books.forEach(function(item) {
+      bookTitles.push(item.title);
     });
 
-    // Response to the client
-    res.send({
-      data: {
-        type: 'books',
-        id: newId,
-        attributes: newBook
-      }
-    });
+    if (bookTitles.indexOf(newBook.title) !== -1) {
+      res.status(400).send({
+        errors: [
+          {
+            source: { pointer: '/data/attributes/title' },
+            detail: 'must be unique'
+          }
+        ]
+      });
+    } else {
+      // books is server memory of the book store, a JS array
+      books.push({
+        title: newBook.title,
+        description: newBook.description,
+        author: newBook.author,
+        id: newId
+      });
+
+      // Response to the client
+      res.send({
+        data: {
+          type: 'books',
+          id: newId,
+          attributes: newBook
+        }
+      });
+    }
   });
 
   booksRouter.get('/:id', function(req, res) {

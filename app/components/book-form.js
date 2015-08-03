@@ -3,9 +3,6 @@ import DS from 'ember-data';
 import Validator from 'npm:validator';
 
 export default Ember.Component.extend({
-  // Initialize the DS.Errors object I guess
-  errors: DS.Errors.create(),
-
   buttonLabel: function() {
     // This is an interesting pattern
     // this.get('book') returns the book property that was passed into this component
