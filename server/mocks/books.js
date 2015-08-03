@@ -26,6 +26,7 @@ module.exports = function(app) {
   booksRouter.get('/', function(req, res) {
     var data = [];
     books.forEach(function(item) {
+      // The format below is the JSONApi format
       data.push({
         type: 'books',
         id: item.id.toString(),
@@ -44,12 +45,25 @@ module.exports = function(app) {
 
   booksRouter.post('/', function(req, res) {
     // Need body parser for this post method to work
-    var newBook = req.body.book;
+    // body.data probably extracts the hash I think
+    var newBook = req.body.data.attributes;
     var newId = books.length + 1;
-    newBook.id = newId;
-    books.push(newBook);
+    
+    // books is server memory of the book store, a JS array
+    books.push({
+      title: newBook.title,
+      description: newBook.description,
+      author: newBook.author,
+      id: newId
+    });
+
+    // Response to the client
     res.send({
-      book: newBook
+      data: {
+        type: 'books',
+        id: newId,
+        attributes: newBook
+      }
     });
   });
 
