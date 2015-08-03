@@ -1,6 +1,9 @@
 import Ember from 'ember';
+import DS from 'ember-data';
 
 export default Ember.Component.extend({
+  errors: DS.Errors.create(),
+
   buttonLabel: function() {
     // This is an interesting pattern
     // this.get('book') returns the book property that was passed into this component
@@ -8,18 +11,32 @@ export default Ember.Component.extend({
     // you should be calling update. Wow!
     return (this.get('book').id) ? 'Update Book' : 'Add Book';
   }.property(),
+
   actions: {
     submit: function() {
-      // Perhaps it's a new thing but for components you need to this.get('property')
-      // instead of referring to it directly...
-      // this.get('book') refers to the property WITHIN this component that is called
-      // 'book'. The component's 'book' property was passed in when we were using the 
-      // book-form component in new.hbs
+      if (this.validate()) {
+        // Perhaps it's a new thing but for components you need to this.get('property')
+        // instead of referring to it directly e.g. this.book vs this.get('book')
+        // this.get('book') refers to the property WITHIN this component that is called
+        // 'book'. The component's 'book' property was passed in when we were using the 
+        // book-form component in new.hbs
 
-      // Also I think sendAction is passing the primary action up to the component
-      // Follows standard bubbling practices component -> controller -> route (apparently from 
-      // what I read in a discussion thread)
-      this.sendAction('action', this.get('book'));
+        // Also I think sendAction is passing the primary action up to the component
+        // Follows standard bubbling practices component -> controller -> route (apparently from 
+        // what I read in a discussion thread)
+        this.sendAction('action', this.get('book'));  
+      } 
     }
+  },
+
+  validate: function() {
+    this.set('errors', DS.Errors.create());
+
+    if (this.get('book.title') === '' || this.get('book.title') === undefined) {
+      this.get('errors').add('title', 'cannot be empty');
+    }
+
+    // the isEmpty property is provided to us by DS.Errors
+    return this.get('errors.isEmpty');
   }
 });
