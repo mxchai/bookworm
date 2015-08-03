@@ -106,6 +106,13 @@ module.exports = function(app) {
   });
 
   booksRouter.delete('/:id', function(req, res) {
+    var bookId = req.params.id;
+    for (var i = 0; i < books.length; i++) {
+      if (parseInt(bookId) === books[i].id) {
+        books.splice(i, 1);
+        break;
+      }
+    }
     res.status(204).end();
   });
 
