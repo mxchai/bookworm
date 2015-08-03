@@ -25,19 +25,21 @@ export default Ember.Component.extend({
         // what I read in a discussion thread)
         this.sendAction('action', this.get('book'));  
       } 
+    },
+
+    validateTitle: function(value) {
+      this.validateTitle(value);
+    },
+
+    validateAuthor: function(value) {
+      this.validateAuthor(value);
     }
   },
 
   validate: function() {
     this.set('errors', DS.Errors.create());
-
-    if (Validator.isNull(this.get('book.title'))) {
-      this.get('errors').add('title', 'cannot be empty');
-    }
-
-    if (Validator.isNull(this.get('book.author'))) {
-      this.get('errors').add('author', 'cannot be empty');
-    }
+    this.validateTitle(this.get('book.title'));
+    this.validateAuthor(this.get('book.author'));
 
     if (Validator.isNull(this.get('book.description'))) {
       this.get('errors').add('description', 'cannot be empty');
@@ -45,5 +47,19 @@ export default Ember.Component.extend({
 
     // the isEmpty property is provided to us by DS.Errors
     return this.get('errors.isEmpty');
+  },
+
+  validateTitle: function(value) {
+    this.get('errors').remove('title');
+    if (Validator.isNull(value)) {
+      this.get('errors').add('title', 'cannot be empty');
+    }
+  },
+
+  validateAuthor: function(value) {
+    this.get('errors').remove('author');
+    if (Validator.isNull(value)) {
+      this.get('errors').add('author', 'cannot be empty');
+    }
   }
 });
