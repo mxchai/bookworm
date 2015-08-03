@@ -1,5 +1,8 @@
 <div class="list-group">
   {{#each books as |book|}}
-    {{#link-to 'books.book' book class="list-group-item"}} {{book.title}} {{/link-to}}
+    {{!-- isNew means it's not yet synced with server i.e. not .save() --}}
+    {{#unless book.isNew}}
+      {{#link-to 'books.book' book class="list-group-item"}} {{book.title}} {{/link-to}}
+    {{/unless}}
   {{/each}}
 </div>
