@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import DS from 'ember-data';
+import Validator from 'npm:validator';
 
 export default Ember.Component.extend({
+  // Initialize the DS.Errors object I guess
   errors: DS.Errors.create(),
 
   buttonLabel: function() {
@@ -32,8 +34,16 @@ export default Ember.Component.extend({
   validate: function() {
     this.set('errors', DS.Errors.create());
 
-    if (this.get('book.title') === '' || this.get('book.title') === undefined) {
+    if (Validator.isNull(this.get('book.title'))) {
       this.get('errors').add('title', 'cannot be empty');
+    }
+
+    if (Validator.isNull(this.get('book.author'))) {
+      this.get('errors').add('author', 'cannot be empty');
+    }
+
+    if (Validator.isNull(this.get('book.description'))) {
+      this.get('errors').add('description', 'cannot be empty');
     }
 
     // the isEmpty property is provided to us by DS.Errors

@@ -23,7 +23,7 @@ export default Ember.Route.extend({
       var _this = this;
       book.save().then(function(book) {
         _this.transitionTo('books.book', book);
-      })
+      });
 
       // Legacy code
       // this.store.createRecord('book', book).save().then(function(book) {
