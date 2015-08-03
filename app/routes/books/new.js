@@ -15,6 +15,9 @@ export default Ember.Route.extend({
     createBook: function(book) {
       var _this = this;
       this.store.createRecord('book', book).save().then(function(book) {
+        // book is a variable for the response from the server
+        // which in this case, is really a book
+        // check server/mocks/books.js POST request response for details
         _this.transitionTo('books.book', book);
       });
     }
